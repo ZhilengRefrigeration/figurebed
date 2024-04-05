@@ -8,6 +8,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import top.shenyuge.figurebed.cache.ImgCache;
 
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+
 /**
  * @author 制冷
  * @date 2024/3/25 14:13
@@ -26,16 +31,69 @@ public class MyCacheInit {
     public void runRan() throws Exception {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource[] resources = resolver.getResources("file:" + RanPath + "/*.{jpg,jpeg,png,gif}");
+        ImgCache.ranImgAllName.clear();
         for (Resource resource : resources) {
             ImgCache.ranImgAllName.add(resource.getFilename());
         }
+
     }
     @PostConstruct
     public void runPin() throws Exception {
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource[] resources = resolver.getResources("file:" + PinPath + "/*.{jpg,jpeg,png,gif}");
+        ImgCache.pinImgAllName.clear();
         for (Resource resource : resources) {
             ImgCache.pinImgAllName.add(resource.getFilename());
         }
+    }
+
+    @PostConstruct
+    public void cleaningRepetition() {
+        new Thread(()->{
+
+            log.info("开始清理.....");
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resourcesRan;
+            try {
+                resourcesRan = resolver.getResources("file:" + RanPath + "/*.{jpg,jpeg,png,gif}");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Set<String> uniqueFileHashes = new HashSet<>();
+
+            for (Resource resource : resourcesRan) {
+                try {
+                    byte[] fileContent = resource.getContentAsByteArray();
+                    String fileHash = getFileHash(fileContent);
+
+                    if (!uniqueFileHashes.contains(fileHash)) {
+                        uniqueFileHashes.add(fileHash);
+                    } else {
+                        System.out.println("清除重复照片: " + resource.getFilename());
+                        FileUtils.delFile(RanPath + resource.getFilename());
+                    }
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                Thread.sleep(1000*60*60*24);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+
+    private String getFileHash(byte[] fileContent) throws NoSuchAlgorithmException {
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        byte[] hashBytes = md5.digest(fileContent);
+        StringBuilder hexHash = new StringBuilder();
+
+        for (byte b : hashBytes) {
+            hexHash.append(String.format("%02x", b));
+        }
+
+        return hexHash.toString();
     }
 }

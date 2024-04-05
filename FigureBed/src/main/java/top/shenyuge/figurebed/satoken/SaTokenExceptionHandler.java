@@ -3,6 +3,7 @@ package top.shenyuge.figurebed.satoken;
 import cn.dev33.satoken.exception.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 import top.shenyuge.figurebed.util.Result;
 
 /**
@@ -43,4 +44,10 @@ public class SaTokenExceptionHandler {
     public Result<String> handlerNotSafeException(NotSafeException e) {
         return Result.error(401, "二级认证异常：" + e.getMessage());
     }
+
+    @ExceptionHandler(MultipartException.class)
+    public Result<String> handleMultipartException(MultipartException ex) {
+        return Result.error(500, "你没有上传文件");
+    }
+
 }

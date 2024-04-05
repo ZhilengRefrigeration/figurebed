@@ -1,6 +1,6 @@
 package top.shenyuge.figurebed.cache;
 
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 /**
  * @author 制冷
@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class ImgCache {
 
-    public static ArrayList<String> ranImgAllName = new ArrayList<>();
+    public static TreeSet<String> ranImgAllName = new TreeSet<>();
 
-    public static ArrayList<String> pinImgAllName = new ArrayList<>();
+    public static TreeSet<String> pinImgAllName = new TreeSet<>();
 
 }
