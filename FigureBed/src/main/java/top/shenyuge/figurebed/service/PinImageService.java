@@ -1,9 +1,7 @@
 package top.shenyuge.figurebed.service;
 
-import org.springframework.core.io.InputStreamResource;
 import top.shenyuge.figurebed.bean.PageBean;
-
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author 制冷
@@ -12,6 +10,6 @@ import java.util.List;
  */
 public interface PinImageService {
 
-    List<InputStreamResource> getImg(PageBean page);
+    Set<String> getImg(PageBean page);
 
 }
