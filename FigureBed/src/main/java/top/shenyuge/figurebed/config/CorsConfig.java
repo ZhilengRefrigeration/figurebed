@@ -4,6 +4,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.Collections;
+
 /**
  * @author 制冷
  * @date 2024/4/2 16:13
@@ -17,7 +20,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         // 允许跨域访问的源，* 表示所有
-        config.addAllowedOrigin("*");
+        config.setAllowedOrigins(Collections.singletonList("*"));
         // 允许跨域访问的请求方法
         config.addAllowedMethod("*");
         // 允许跨域访问的请求头
@@ -27,4 +30,7 @@ public class CorsConfig {
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
+
 }
+
+

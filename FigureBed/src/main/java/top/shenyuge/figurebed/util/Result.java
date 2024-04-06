@@ -39,7 +39,7 @@ public class Result<E> {
     }
 
     public static <T> Result<T> success(String msg, T data) {
-        return new Result<>(0, msg, data);
+        return new Result<>(200, msg, data);
     }
 
     //失败响应

@@ -31,9 +31,9 @@
 import {reactive} from "vue";
 import { onMounted } from 'vue'
 import axios from "axios";
-import {User, Lock} from "@element-plus/icons-vue";
+import {User} from "@element-plus/icons-vue";
 import { ElMessage } from 'element-plus'
-import {serverUrl} from '/public/static/config.json';
+import {serverUrl} from '@/static/config.json';
 import router from "@/config/router.js";
 const form = reactive({
   username: '',

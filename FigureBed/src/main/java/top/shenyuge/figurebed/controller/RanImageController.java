@@ -50,7 +50,7 @@ public class RanImageController {
         }
         HashMap<String, String> uploadIsOk = new HashMap<>();
         multipleFile.forEach((file)->{
-            if("".equals(file.getOriginalFilename()) && ImgCache.ranImgAllName.add(file.getOriginalFilename()) && FileUtils.upload(file, path, file.getOriginalFilename())){
+            if(!"".equals(file.getOriginalFilename()) && ImgCache.ranImgAllName.add(file.getOriginalFilename()) && FileUtils.upload(file, path, file.getOriginalFilename())){
                 uploadIsOk.put(file.getOriginalFilename(), url+"/show?fileName="+file.getOriginalFilename());
             }else{
                 uploadIsOk.put(file.getOriginalFilename(), "上传失败");
@@ -83,7 +83,7 @@ public class RanImageController {
         if(null == pageBean || !pageBean.isValidPage()){
             return Result.error(500, "参数错误");
         }
-        return Result.success(service.getImg(pageBean));
+        return Result.success(String.valueOf(ImgCache.ranImgAllName.size()), service.getImg(pageBean));
     }
 
     /**
@@ -100,6 +100,12 @@ public class RanImageController {
             return Result.requestServerError();
         }
     }
+
+    /**
+     * 批量删除图片
+     * @param imgBeans
+     * @return
+     */
     @PostMapping("delImg")
     public Result<String> delImg(@RequestBody List<ImgBean> imgBeans){
         imgBeans.forEach(imgBean -> {FileUtils.delFile( path+imgBean.getName());ImgCache.ranImgAllName.remove(imgBean.getName());});
