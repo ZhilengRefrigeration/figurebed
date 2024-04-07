@@ -7,8 +7,6 @@ import serviceAxios from "@/config/axiosConfig.js";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import router from "@/config/router.js";
 
-
-
 const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

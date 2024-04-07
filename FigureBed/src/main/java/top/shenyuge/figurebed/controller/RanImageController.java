@@ -33,8 +33,6 @@ public class RanImageController {
     @Value("${server.public-address}/ran")
     private  String url;
 
-    private final MyCacheInit myCacheInit;
-
     private final RanImageService service;
 
     /**
@@ -64,7 +62,7 @@ public class RanImageController {
      * @return 随机一张图片
      */
     @GetMapping("/randomShow")
-    public ResponseEntity<InputStreamResource> randomShow() {
+    public ResponseEntity<InputStreamResource> randomShow(String filename) {
         if (ImgCache.ranImgAllName.isEmpty()) {
             return Result.requestServerError();
         }
@@ -115,7 +113,6 @@ public class RanImageController {
     @Autowired
 
     public RanImageController(MyCacheInit myCacheInit, RanImageService service) {
-        this.myCacheInit = myCacheInit;
         this.service = service;
     }
 }
