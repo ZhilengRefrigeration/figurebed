@@ -1,5 +1,5 @@
 <template>
-  <div id="building" v-bind:style="{background: 'url(' + serverUrl + '/ran/show?fileName=p1181.png)'}">
+  <div id="building" v-bind:style="{background: 'url(' + serverUrl + '/ran/randomShow)', backgroundSize: 'cover'}">
     <el-container>
       <el-main style="height: 80vh; display: flex; justify-content: center; align-items: center;">
         <el-row class="centered-row">
@@ -72,7 +72,7 @@ const login = () => {
           if(res.code === 200){
             localStorage.setItem('token',res.data.tokenValue)
             ElMessage.success("登录成功 欢迎Master!")
-            router.push("/home")
+            router.push("/home/main")
           }else{
             ElMessage.warning(res.msg)
           }

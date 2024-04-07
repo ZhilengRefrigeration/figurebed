@@ -5,12 +5,13 @@
         <!-- 面包屑 -->
         <div class="head">
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item to="{ path: '/home' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/home/main' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>随机图库管理</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
         <el-card class="box-card">
-          <el-form :inline="true" label-width="auto" style="max-width: 600px">
+          <el-form :inline="true" label-width="auto" style="max-width: 600px; margin: 0 1vh 0 1vh" >
+            <el-form-item><el-text style="width: 150vh"></el-text></el-form-item>
             <el-form-item label="图片名">
               <el-input type="text" v-model="this.pageBean.search"/>
             </el-form-item>
@@ -31,6 +32,7 @@
                 :on-success="handleSuccess"
                 :on-error="handleError"
                 :on-preview="handlePictureCardPreview"
+                style="margin: 0 1vh 0 1vh"
             >
               <el-text type="success">上传图片</el-text>
               <template #file="{ file }">
@@ -88,7 +90,7 @@
 <script>
 import {ElMessage} from 'element-plus';
 import {serverUrl} from '@/static/config.json';
-import {Delete, Download, Search, ZoomIn} from "@element-plus/icons-vue";
+import {Delete, Download, ZoomIn} from "@element-plus/icons-vue";
 export default {
   components: {Delete, Download, ZoomIn},
   data(){
@@ -107,7 +109,7 @@ export default {
       dialogImageUrl:{},
       dialogVisible: false,
     }
-  },created() {
+  },mounted() {
     this.$axios.post("/ran/getImg", this.pageBean)
         .then(res => {
           if(res.data.code === 200){
@@ -115,7 +117,6 @@ export default {
             res.data.data.forEach(item=>{this.listImg.push({"name":item.split('=')[1],"url":item})})
           }else{
             if(res.data.code === 401){
-              console.log(localStorage.getItem('token'))
               this.$router.push({path:'/'})
             }
             ElMessage.warning(res.data.msg)
