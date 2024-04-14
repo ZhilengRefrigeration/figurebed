@@ -2,11 +2,14 @@ package top.shenyuge.figurebed.util;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.shenyuge.figurebed.cache.ImgCache;
+import top.shenyuge.figurebed.service.InterfaceLogService;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -26,6 +29,14 @@ public class MyCacheInit {
 
     @Value("${web.upload-path-pin}")
     private String PinPath;
+
+
+    private final InterfaceLogService service;
+
+    @Autowired
+    public MyCacheInit(InterfaceLogService service) {
+        this.service = service;
+    }
 
     @PostConstruct
     public void runRan() throws Exception {
@@ -73,7 +84,7 @@ public class MyCacheInit {
                         FileUtils.delFile(RanPath + resource.getFilename());
                     }
                 } catch (IOException | NoSuchAlgorithmException e) {
-                    e.printStackTrace();
+                   log.error(e.getMessage());
                 }
             }
 
@@ -95,5 +106,10 @@ public class MyCacheInit {
         }
 
         return hexHash.toString();
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void sayHello() {
+        service.initDataBase();
     }
 }

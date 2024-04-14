@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @TableName("interfaceLog")
 public class InterfaceLog {
 
-    @TableId(type = IdType.ASSIGN_ID)
+    @TableId(type = IdType.ASSIGN_UUID)
     private Integer logId;
 
     private String interfaceName;

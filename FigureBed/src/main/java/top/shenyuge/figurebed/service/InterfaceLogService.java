@@ -9,4 +9,5 @@ import top.shenyuge.figurebed.bean.InterfaceLog;
  * @description interfaceLogService
  */
 public interface InterfaceLogService extends IService<InterfaceLog> {
+void initDataBase();
 }
