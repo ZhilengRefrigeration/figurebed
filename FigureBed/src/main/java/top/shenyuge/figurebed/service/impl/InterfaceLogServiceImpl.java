@@ -13,4 +13,9 @@ import top.shenyuge.figurebed.service.InterfaceLogService;
  */
 @Service
 public class InterfaceLogServiceImpl extends ServiceImpl<InterfaceLogMapper, InterfaceLog> implements InterfaceLogService {
+
+    @Override
+    public void initDataBase() {
+        baseMapper.initDataBase();
+    }
 }
