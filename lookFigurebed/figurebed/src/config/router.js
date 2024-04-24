@@ -26,7 +26,14 @@ const router = createRouter({
                     path: '/home/ran',
                     component: () =>
                         import ("@/components/children/RanPage.vue")
+                },
+                {
+                    path: '/home/ranking',
+                    component: () =>
+                        import("@/components/children/Echarts.vue")
+
                 }
+
             ]
         },
     ]

@@ -42,6 +42,12 @@
                   <span class="el-upload-list__item-actions">
           <span
               class="el-upload-list__item-preview"
+              @click="copyUrl(file)"
+          >
+            <el-icon><CopyDocument /></el-icon>
+          </span>
+          <span
+              class="el-upload-list__item-preview"
               @click="handlePictureCardPreview(file)"
           >
             <el-icon><zoom-in /></el-icon>
@@ -90,9 +96,9 @@
 <script>
 import {ElMessage} from 'element-plus';
 import {serverUrl} from '@/static/config.json';
-import {Delete, Download, ZoomIn} from "@element-plus/icons-vue";
+import {CopyDocument, Delete, Download, ZoomIn} from "@element-plus/icons-vue";
 export default {
-  components: {Delete, Download, ZoomIn},
+  components: {CopyDocument, Delete, Download, ZoomIn},
   data(){
     return{
       pageBean:{
@@ -187,7 +193,16 @@ export default {
           .catch(error => {
             console.error('错误:', error);
           });
-    }
+    },
+    copyUrl(file){
+      navigator.clipboard.writeText(serverUrl+"/ran/show?fileName="+file.name)
+          .then(()=>{
+            ElMessage.success("复制成功！")
+          })
+          .catch(()=>{
+            ElMessage.error("复制失败，可能是浏览器不兼容或无权限！")
+          })
+    },
 
 
   }
