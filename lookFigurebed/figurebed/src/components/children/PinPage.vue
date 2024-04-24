@@ -11,7 +11,9 @@
         </div>
         <el-card class="box-card">
           <el-form :inline="true" label-width="auto" style="max-width: 600px; margin: 0 1vh 0 1vh">
-            <el-form-item><el-text style="width: 150vh"></el-text></el-form-item>
+            <el-form-item>
+              <el-text style="width: 150vh"></el-text>
+            </el-form-item>
             <el-form-item label="图片名">
               <el-input type="text" v-model="this.pageBean.search"/>
             </el-form-item>
@@ -37,26 +39,33 @@
               <el-text type="success">上传图片</el-text>
               <template #file="{ file }">
                 <div class="file-info-container">
-                  <el-text type="info">{{file.name}}</el-text>
-                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <el-text type="info">{{ file.name }}</el-text>
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt=""/>
                   <span class="el-upload-list__item-actions">
+
+         <span
+             class="el-upload-list__item-preview"
+             @click="copyUrl(file)"
+         >
+           <el-icon><CopyDocument /></el-icon>
+         </span>
           <span
               class="el-upload-list__item-preview"
               @click="handlePictureCardPreview(file)"
           >
-            <el-icon><zoom-in /></el-icon>
+            <el-icon><zoom-in/></el-icon>
           </span>
           <span
               class="el-upload-list__item-delete"
               @click="handleDownload(file)"
           >
-            <el-icon><Download /></el-icon>
+            <el-icon><Download/></el-icon>
           </span>
           <span
               class="el-upload-list__item-delete"
               @click="handleRemove(file)"
           >
-            <el-icon><Delete /></el-icon>
+            <el-icon><Delete/></el-icon>
           </span>
         </span>
                 </div>
@@ -86,80 +95,85 @@
 <script>
 import {ElMessage} from 'element-plus';
 import {serverUrl} from '@/static/config.json';
-import {Delete, Download, Search, ZoomIn} from "@element-plus/icons-vue";
+import {CopyDocument, Delete, Download, Search, ZoomIn} from "@element-plus/icons-vue";
+
 export default {
-  components: {Delete, Download, ZoomIn},
-  data(){
-    return{
-      pageBean:{
-        pageNum:1,
-        pageSize:30,
-        search:""
+  components: {CopyDocument, Delete, Download, ZoomIn},
+  data() {
+    return {
+      pageBean: {
+        pageNum: 1,
+        pageSize: 30,
+        search: ""
       },
-      form:{},
-      token:localStorage.getItem('token'),
-      listImg:[],
-      imgSize:1,
-      serverUrl:serverUrl,
-      fileName:'',
-      dialogImageUrl:{},
+      form: {},
+      token: localStorage.getItem('token'),
+      listImg: [],
+      imgSize: 1,
+      serverUrl: serverUrl,
+      fileName: '',
+      dialogImageUrl: {},
       dialogVisible: false,
     }
-  },mounted() {
+  }, mounted() {
     this.$axios.post("/pin/getImg", this.pageBean)
-    .then(res => {
-      if(res.data.code === 200){
-        this.imgSize = res.data.msg
-        res.data.data.forEach(item=>{this.listImg.push({"name":item.split('=')[1],"url":item})})
-      }else{
-          this.$router.push({path:'/'})
-        ElMessage.warning(res.data.msg)
-      }
-    }).catch(()=>{
+        .then(res => {
+          if (res.data.code === 200) {
+            this.imgSize = res.data.msg
+            res.data.data.forEach(item => {
+              this.listImg.push({"name": item.split('=')[1], "url": item})
+            })
+          } else {
+            this.$router.push({path: '/'})
+            ElMessage.warning(res.data.msg)
+          }
+        }).catch(() => {
       ElMessage.error("服务器错误！")
     })
   },
-  methods:{
-    handleRemove(uploadFile){
-      this.$axios.post("/pin/delImg", [{name:uploadFile.name}])
+  methods: {
+    handleRemove(uploadFile) {
+      this.$axios.post("/pin/delImg", [{name: uploadFile.name}])
           .then(res => {
-            if(res.data.code === 200){
+            if (res.data.code === 200) {
               const index = this.listImg.findIndex(item => item.name === uploadFile.name && item.url === uploadFile.url);
               if (index !== -1) {
                 this.listImg.splice(index, 1);
               }
-              ElMessage.success(uploadFile.name+"删除成功")
+              ElMessage.success(uploadFile.name + "删除成功")
             }
           })
       return true;
     },
     handleSuccess(response, file) {
       for (const key in response.data) {
-       if(response.data[key] ==='上传失败'){
-         this.listImg.push({"name":key,"url":response.data[key]})
-         ElMessage.error(key+"文件"+response.data[key])
-       }else{
-         ElMessage.success(key+"文件上传成功")
-       }
+        if (response.data[key] === '上传失败') {
+          this.listImg.push({"name": key, "url": response.data[key]})
+          ElMessage.error(key + "文件" + response.data[key])
+        } else {
+          ElMessage.success(key + "文件上传成功")
+        }
       }
     },
     handleError() {
       ElMessage.error("服务器错误")
     },
-    search(){
+    search() {
       this.$axios.post("/pin/getImg", this.pageBean)
           .then(res => {
-            if(res.data.code === 200){
-              this.listImg=[];
-              res.data.data.forEach(item=>{this.listImg.push({"name":item.split('=')[1],"url":item})})
-            }else{
+            if (res.data.code === 200) {
+              this.listImg = [];
+              res.data.data.forEach(item => {
+                this.listImg.push({"name": item.split('=')[1], "url": item})
+              })
+            } else {
               ElMessage.warning(res.data.msg)
             }
-          }).catch(()=>{
+          }).catch(() => {
         ElMessage.error("服务器错误！")
       })
     },
-    handlePictureCardPreview(uploadFile){
+    handlePictureCardPreview(uploadFile) {
       this.dialogImageUrl = uploadFile.url;
       this.dialogVisible = true
     },
@@ -181,7 +195,16 @@ export default {
           .catch(error => {
             console.error('错误:', error);
           });
-    }
+    },
+    copyUrl(file){
+      navigator.clipboard.writeText(serverUrl+"/pin/show?fileName="+file.name)
+          .then(()=>{
+            ElMessage.success("复制成功！")
+          })
+          .catch(()=>{
+            ElMessage.error("复制失败，可能是浏览器不兼容或无权限！")
+          })
+    },
 
 
   }
@@ -198,9 +221,11 @@ export default {
   box-sizing: border-box;
   vertical-align: top;
 }
+
 .demo-image .block:last-child {
   border-right: none;
 }
+
 .demo-image .demonstration {
   display: block;
   color: var(--el-text-color-secondary);
@@ -211,6 +236,7 @@ export default {
 .dialog-footer button:first-child {
   margin-right: 10px;
 }
+
 .file-info-container {
   display: flex; /* 设置为Flex布局 */
   flex-direction: column; /* 垂直排列 */

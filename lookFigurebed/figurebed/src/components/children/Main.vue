@@ -92,7 +92,7 @@ export default {
       }
       this.option.series=[];
       this.option.xAxis.data= [];
-      this.$axios.post("/log/getAllLog", this.dateBean)
+      this.$axios.post("/log/getAllLog", this.dateBean, )
           .then(res => {
             if(res.data.code === 200){
               res.data.data.forEach(item=>{

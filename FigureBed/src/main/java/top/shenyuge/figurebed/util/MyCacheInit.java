@@ -75,6 +75,11 @@ public class MyCacheInit {
             for (Resource resource : resourcesRan) {
                 try {
                     byte[] fileContent = resource.getContentAsByteArray();
+                    if(fileContent.length == 0){
+                        System.out.println("清除无效照片: " + resource.getFilename());
+                        FileUtils.delFile(RanPath + resource.getFilename());
+                        continue;
+                    }
                     String fileHash = getFileHash(fileContent);
 
                     if (!uniqueFileHashes.contains(fileHash)) {
@@ -93,6 +98,11 @@ public class MyCacheInit {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            try {
+                runPin();
+            } catch (Exception e) {
+               log.error(e.getMessage());
+            }
         }).start();
     }
 
@@ -108,7 +118,7 @@ public class MyCacheInit {
         return hexHash.toString();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "30 0 0 * * ?")
     public void sayHello() {
         service.initDataBase();
     }
