@@ -52,9 +52,8 @@ public class AopAdvice {
             one.setInterfaceCount(one.getInterfaceCount()+1);
             service.update(one, upLog);
         }else{
-            service.save(new InterfaceLog(interfaceName, LocalDate.now(), 1));
+            service.initDataBase();
         }
-
 
     }
 

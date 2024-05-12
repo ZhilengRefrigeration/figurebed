@@ -28,8 +28,7 @@
             </el-form-item>
           </el-form>
           <el-row>
-            <el-col :span="4"><div/></el-col>
-            <el-col :span="20"><div id="line-chart"  style="height: 40vh;width: 100vh; "></div></el-col>
+            <el-col :span="24"><div id="line-chart"  style="height: 40vh;width: 150vh; "></div></el-col>
           </el-row>
         </el-card>
       </div>
@@ -40,6 +39,7 @@
 import {ElMessage} from 'element-plus';
 import {Delete, Download, RefreshLeft, ZoomIn} from "@element-plus/icons-vue";
 import * as echart from "echarts";
+import {markRaw} from "vue";
 export default {
   computed: {
     RefreshLeft() {
@@ -81,7 +81,7 @@ export default {
     }
   },
   mounted() {
-    this.myChart = echart.init(document.getElementById('line-chart'));
+    this.myChart =  markRaw(echart.init(document.getElementById('line-chart')));
     this.refreshData()
   },
   methods:{

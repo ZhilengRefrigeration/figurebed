@@ -1,5 +1,6 @@
 package top.shenyuge.figurebed.util;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import top.shenyuge.figurebed.bean.InterfaceLog;
 import top.shenyuge.figurebed.cache.ImgCache;
 import top.shenyuge.figurebed.service.InterfaceLogService;
 
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -120,6 +123,11 @@ public class MyCacheInit {
 
     @Scheduled(cron = "30 0 0 * * ?")
     public void sayHello() {
-        service.initDataBase();
+        LambdaQueryWrapper<InterfaceLog> getNowLog = new LambdaQueryWrapper<>();
+        getNowLog
+                .eq(InterfaceLog::getInterfaceDate, LocalDate.now());
+        if(!(service.list(getNowLog).size()>11)){
+            service.initDataBase();
+        }
     }
 }
